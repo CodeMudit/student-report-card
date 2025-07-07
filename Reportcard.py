@@ -46,25 +46,32 @@ class ReportCard :
         #while True :
             student = input("Enter the name of the student : ")
             Class = input("Enter the student's class : ")
-            roll_no = input("Enter the student's roll number : ")
+            while True :
+                try :
+                    roll_no = int(input("Enter the student's roll number : "))
+                    if any(user["Roll Number"] == roll_no for user in self.grades) :
+                        print("This roll number has already been registered please enter a valid roll number")
+                        continue
+                    else :
+                        break
+                        
+                    
+                except ValueError :
+                    print("Please enter a valid roll number")
+                break
+
+                    
             grades = "o"
             while True :
-                Maths = float(input("Enter the student's Marks in Maths : "))
-                if Maths > 100 :
-                    print("Please enter valid Marks ")
-                    continue
-                English = float(input("Enter the student's marks in English : "))
-                if English > 100 :
-                    print("Please enter valid Marks ")
-                    continue
-                Science = float(input("Enter the student's marks in Science : "))
-                if Science > 100 :
-                    print("Please enter valid Marks ")
-                    continue
+                Maths = self.valid_marks("Maths")
+                
+                English = self.valid_marks("English")
+                
+                Science = self.valid_marks("Science")
                 break
             sum = Maths + English + Science
             total = sum
-            Percentage = (total/3) 
+            Percentage = (total/3) *100
             if float(Percentage) >= 90 :
                 grades = "A"
             elif float(Percentage) >= 80 :
@@ -130,11 +137,13 @@ class ReportCard :
             while True : 
                 found = False
                 new_roll = input("Enter the Student's roll number : ").strip()
-                if any(st["Roll Number"] == new_roll for st in self.grades) :
-                    print("Student report found!!")
-                    self.newgrades()
-                    found = True
-                    break
+                for st in self.grades :
+                    if st["Roll Number"] == new_roll :
+                        print("Student report found!!")
+                        self.newgrades()
+                        self.savegrades()
+                        found = True
+                        break
                 if not found :
                     print("Please enter a valid Roll Number ")
                     continue
@@ -149,20 +158,20 @@ class ReportCard :
                         new_grade = input("Enter the subject for which you want to upgrade the grades : ").strip()
                         for grade in self.grades :
                             if new_grade == "Maths" : 
-                                updated = float(input("Enter the new grades for Maths : "))
+                                updated = (input("Enter the new grades for Maths : "))
                                 grade["Maths"] = updated
                                 found1 = True
                                 self.ask()
                                 break
                             elif new_grade == "English" :
-                                updated1 = float(input("Enter the new grades for English : "))
+                                updated1 = (input("Enter the new grades for English : "))
                                 grade["English"] = updated1
                                 found1 = True
                                 self.ask()
                                 break
 
                             elif new_grade == "Science" :
-                                updated2 = float(input("Enter the new grade for Science : "))
+                                updated2 = (input("Enter the new grade for Science : "))
                                 grade["Science"] = updated2
                                 found1 = True
                                 self.ask()
@@ -171,6 +180,14 @@ class ReportCard :
                             print("Please Enter a valid subject")
                             continue
                         break
+                    for grade in self.grades :
+                        grade["Total"] = round(float(grade["English"]) + float(grade["Maths"]) + float(grade["Science"]))
+                        grade["Percentage"] = (grade["Total"]/3) 
+
+                    
+
+    
+
                     
                 
     def ask(self) :
@@ -181,7 +198,7 @@ class ReportCard :
                 break
             elif ask == "n" :
                 print("Thanks for using this programme")
-                repeat()
+                
                 break
             else :
                 print("Please select a valid input")
@@ -206,6 +223,30 @@ class ReportCard :
             print("No records exist Enter some details first")
             self.record()
 
+    def valid_marks(self,subject) :
+        while True :
+            try :
+                marks = float(input(f"Please enter the marks of {subject} (0-100) : "))
+                if 0 < marks < 100 :
+                    return marks
+                
+                else : 
+                    print("Marks must be between 0 and 100")
+                    
+
+            except ValueError :
+                print("Please enter a valid value")
+
+    def grade_distribution(self) :
+        distribution = {"A" : 0,"B" : 0,"C" : 0}
+        for student in self.grades :
+            grade = student["Grades"]
+        if grade in distribution :
+            distribution[grade] += 1
+        for grade , count in distribution.items() :
+            print(f"{grade} : {count} student(s)")
+
+
 student = ReportCard()
 
 def execute() :
@@ -215,7 +256,9 @@ def execute() :
                         2.View All Students
                         3.Search Student by Roll Number
                         4.Update the grades of a student
-                        5.Exit"""))
+                        5.Grade Distribution
+                        6.Exit
+                            """))
     if opt == 1 :
         student.record()
         repeat()
@@ -233,6 +276,10 @@ def execute() :
         repeat()
 
     elif opt == 5:
+        student.grade_distribution()
+        repeat()
+
+    elif opt == 6:
         exit()
 
     else :
@@ -240,9 +287,6 @@ def execute() :
         execute()
 
 execute()
-
-
-                                
 
 
 
