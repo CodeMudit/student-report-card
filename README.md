@@ -14,6 +14,8 @@ This is a Python-based **Student Report Card System** built using Object-Oriente
 - ✅ Automatically calculate total, percentage, and grade
 - ✅ Save and load data from CSV file (`students.csv`)
 - ✅ Search student by roll number
+- ✅ Update a student's report card and recalculate percentage
+- ✅ Displays how grades are distributed on the basis of marks
 - ✅ Delete a student’s record
 - ✅ Menu-driven command-line
 ---
