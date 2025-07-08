@@ -1,5 +1,6 @@
-import csv 
+
 import os
+import json
 
 def repeat() :
     while True :
@@ -20,27 +21,35 @@ def repeat() :
 
 class ReportCard :
     def __init__(self) :
-        file_name = "Grades.csv"
+        file_name = "Grades.json"
         self.grades = []
         self.loadgrades()
 
 
 
     def savegrades(self) :
-        with open("Grades.csv","w",newline = "") as file :
-            fieldnames = ["Name","Class","Roll Number","Maths","English","Science","Total","Percentage","Grades"]
-            writer = csv.DictWriter(file,fieldnames = fieldnames , delimiter = "|")
-            writer.writeheader()
-            writer.writerows(self.grades)
+        with open("Grades.json","w") as file :
+            #fieldnames = ["Name","Class","Roll Number","Maths","English","Science","Total","Percentage","Grades"]
+            # writer = csv.DictWriter(file,fieldnames = fieldnames , delimiter = "|")
+            json.dump(self.grades,file,indent = 4)
+            
 
     def loadgrades(self) :
         try :
-            with open("Grades.csv","r") as file :
-                reader = csv.DictReader(file,delimiter = "|")
-                self.grades = list(reader)
+            with open("Grades.json","r") as file :
+                reader = json.load(file)
+                self.grades = (reader)
         except FileNotFoundError :
             print("No grades of students exist please enter some first")
             self.record()
+
+        except json.JSONDecodeError :
+            print("Grades file is corrupt empty")
+            self.grades = []
+            self.record()
+
+          
+
 
     def record(self) :
         #while True :
@@ -71,7 +80,7 @@ class ReportCard :
                 break
             sum = Maths + English + Science
             total = sum
-            Percentage = (total/3) *100
+            Percentage = (total/3) 
             if float(Percentage) >= 90 :
                 grades = "A"
             elif float(Percentage) >= 80 :
@@ -138,7 +147,7 @@ class ReportCard :
                 found = False
                 new_roll = input("Enter the Student's roll number : ").strip()
                 for st in self.grades :
-                    if st["Roll Number"] == new_roll :
+                    if str(st["Roll Number"]) == str(new_roll) :
                         print("Student report found!!")
                         self.newgrades()
                         self.savegrades()
@@ -147,6 +156,8 @@ class ReportCard :
                 if not found :
                     print("Please enter a valid Roll Number ")
                     continue
+                else :
+                    break
                 break
         except FileNotFoundError :
             print("No records found Please enter some grades first")
@@ -183,6 +194,16 @@ class ReportCard :
                     for grade in self.grades :
                         grade["Total"] = round(float(grade["English"]) + float(grade["Maths"]) + float(grade["Science"]))
                         grade["Percentage"] = (grade["Total"]/3) 
+                        if grade["Percentage"] >= 90 :
+                            grade["Grades"] = "A"
+                        elif grade["Percentage"] >=  80 :
+                            grade["Grades"] = "B"
+                        elif 33 <= grade["Percentage"] < 80 :
+                            grade["Grades"] = "C"
+                        else :
+                            grade["Grades"] = "Fail"
+
+                    
 
                     
 
@@ -227,7 +248,7 @@ class ReportCard :
         while True :
             try :
                 marks = float(input(f"Please enter the marks of {subject} (0-100) : "))
-                if 0 < marks < 100 :
+                if 0 <= marks <= 100 :
                     return marks
                 
                 else : 
@@ -287,9 +308,3 @@ def execute() :
         execute()
 
 execute()
-
-
-
-
-
-            
