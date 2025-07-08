@@ -12,7 +12,7 @@ This is a Python-based **Student Report Card System** built using Object-Oriente
 
 - ✅ Add student records (name, roll no, class, subject marks)
 - ✅ Automatically calculate total, percentage, and grade
-- ✅ Save and load data from CSV file (`students.csv`)
+- ✅ Save and load data from JSON file (`Grades.json`)
 - ✅ Search student by roll number
 - ✅ Update a student's report card and recalculate percentage
 - ✅ Displays how grades are distributed on the basis of marks
@@ -23,7 +23,7 @@ This is a Python-based **Student Report Card System** built using Object-Oriente
 ## 📂 Technologies Used
 
 - Python 3 (CLI)
-- `csv` module for file handling
+- `json` module for file handling
 - Object-Oriented Programming (OOP)
 
 ---
